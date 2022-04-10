@@ -1,8 +1,50 @@
 import Head from 'next/head'
-import Image from 'next/image'
-import styles from '../styles/Home.module.css'
+import Layout, { siteTitle } from '../components/layout'
+import utilStyles from '../styles/utils.module.css'
 
-export default function Home() {
+import { getSortedPostsData } from '../lib/posts'
+//import Image from 'next/image'
+//import styles from '../styles/Home.module.css'
+
+import Link from 'next/link'
+import Date from '../components/date'
+
+export default function Home({ allPostsData }) {
+  return (
+    <Layout home>
+      <Head>
+        <title>{siteTitle}</title>
+      </Head>
+      <section className={utilStyles.headingMd}>
+        <h1 className="text-3xl font-bold underline">Hello world!</h1>
+        <p>[Your Self Introduction]</p>
+        <p>
+          (This is a sample website - you’ll be building a site like this on{' '}
+          <Link href="/posts/first-post"><a>First Post</a></Link>.)
+        </p>
+      </section>
+      <section className={`${utilStyles.headingMd} ${utilStyles.padding1px}`}>
+        <h2 className={utilStyles.headingLg}>Blog</h2>
+        <ul className={utilStyles.list}>
+          {allPostsData.map(({ id, date, title }) => (
+            <li className={utilStyles.listItem} key={id}>
+              <Link href={`/posts/${id}`}><a>{title}</a></Link>
+              <br />
+              <small className={utilStyles.lightText}>{date}</small>
+            </li>
+          ))}
+        </ul>
+      </section>
+    </Layout>
+  )
+}
+
+export async function getStaticProps() {
+  const allPostsData = getSortedPostsData()
+  return { props: { allPostsData } }
+}
+
+/*export default function Home() {
   return (
     <div className={styles.container}>
       <Head>
@@ -13,11 +55,11 @@ export default function Home() {
 
       <main className={styles.main}>
         <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
+          Read{' '} <Link href="https://nextjs.org"><a>Next.js!</a></Link>
         </h1>
 
         <p className={styles.description}>
-          Get started by editing{' '}
+          First Post: {' '} <Link href="/posts/first-post"><a>click here</a></Link>
           <code className={styles.code}>pages/index.js</code>
         </p>
 
@@ -66,4 +108,4 @@ export default function Home() {
       </footer>
     </div>
   )
-}
+}*/
